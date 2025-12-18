@@ -1,0 +1,831 @@
+<script setup lang="ts"></script>
+
+<template>
+  <div
+    class="relative p-4 sm:p-6 lg:p-8 xl:p-10 min-h-screen font-archivo overflow-hidden flex flex-col justify-center items-center gap-10"
+  >
+    <!-- <header class="flex justify-center items-center">
+      <img
+        src="/logo.png"
+        alt="iDEKTEP Logo"
+        class="w-80 md:w-90 lg:w-85">
+     </header> -->
+     <header class="flex flex-col justify-center items-center">
+      <p class="font-archivo text-7xl text-white">iDEKTEP</p>
+      <p class="font-damion text-7xl text-idt2 relative -mt-11.5">
+        photo booth
+      </p>
+    </header>
+
+    <a
+      href="/camera"
+      class="text-white text-3xl p-5 bg-idt3 box-border border border-transparent rounded-lg shadow-lg transition duration-300 ease-in-out hover:bg-idt2 focus:ring-4 focus:ring-brand-medium shadow-xs leading-5 rounded-base focus:outline-none"
+      >START</a
+    >
+  </div>
+</template>
+
+<!-- TODO: make effect add christmas stuff also write text "christmas Edition" maybe have some easter egg, bg color should be #00353A and txt "photo booth" should be #C80931 make it minimal and production ready-->
+
+<template>
+  <div
+    class="relative p-4 sm:p-6 lg:p-4 xl:p-10 min-h-screen font-archivo overflow-hidden flex flex-col justify-center items-center gap-2"
+  >
+    <!-- Header -->
+    <header class="flex justify-center">
+      <img src="/logo.png" alt="iDEKTEP Logo" class="md:w-18 md:w-60 lg:w-20" />
+    </header>
+
+    <div class="grid grid-cols-[1fr_auto_1fr] items-start">
+      <!-- Filter Selector -->
+      <div class="flex flex-col gap-3 mr-6">
+        <!-- <button
+          v-for="filter in filters"
+          :key="filter.value"
+          class="w-12 h-12 rounded-lg border-3 transition"
+          :class="
+            selectedFilter === filter.value
+              ? 'bg-idektep border-idt2'
+              : 'bg-white/10 border-white/30'
+          "
+          :aria-label="`Filter: ${filter.name}`"
+          @click="selectedFilter = filter.value"
+        /> -->
+      </div>
+
+      <!-- Camera View -->
+      <div class="flex items-center justify-center">
+        <!-- Placeholder -->
+        <!-- <div
+          v-if="!cameraOn"
+          class="bg-gray-300 rounded-2xl shadow-md flex items-center justify-center cursor-pointer w-full h-[300px] md:w-[493px] md:h-[698px]"
+          @click="startCamera"
+        >
+          <span class="text-gray-700 text-xl md:text-2xl"
+            >กดเพื่อเปิดกล้อง</span
+          >
+        </div> -->
+        <!-- <div
+          v-else
+          class="relative md:w-[493px] md:h-[698px] sm:w-[300px] sm:h-[433px] bg-black rounded-2xl overflow-hidden"
+        > -->
+
+        <!-- Camera Active -->
+        <div
+          class="relative md:w-[493px] md:h-[698px] sm:w-[300px] sm:h-[433px] bg-black rounded-2xl overflow-hidden"
+        >
+          <!-- Photo Counter -->
+          <div
+            class="absolute top-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-lg text-xl font-bold z-20"
+          >
+            {{ currentPhotoIndex }} / 4
+          </div>
+
+          <!-- Video Stream -->
+          <video
+            ref="videoRef"
+            autoplay
+            playsinline
+            muted
+            class="w-full h-full object-cover scale-x-[-1]"
+            :style="videoStyle"
+          />
+
+          <!-- Countdown Overlay -->
+          <div
+            v-if="showCountdown"
+            class="absolute inset-0 flex items-center justify-center text-white text-8xl font-bold bg-black/40 z-30"
+          >
+            {{ countdown }}
+          </div>
+
+          <!-- Preview Overlay -->
+          <div
+            v-if="showPreview && lastCapturedImage"
+            class="absolute inset-0 bg-black flex items-center justify-center z-20 scale-x-[-1]"
+          >
+            <img
+              :src="lastCapturedImage"
+              class="w-full h-full object-cover scale-x-[-1]"
+              :style="previewStyle"
+              alt="Preview"
+            />
+          </div>
+
+          <!-- Capture Button -->
+          <div>
+            <button
+              :disabled="!cameraOn || isCapturing"
+              :class="[
+                'absolute bottom-4 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full transition shadow-lg z-30',
+                isCapturing ? 'bg-red-500' : 'bg-faded',
+                !cameraOn && 'opacity-50 cursor-not-allowed',
+              ]"
+              :aria-label="isCapturing ? 'Capturing photos' : 'Start capture'"
+              @click="startPhotoSequence"
+            />
+          </div>
+
+          <!-- Close Button -->
+          <!-- <button
+            class="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-lg z-40 hover:bg-red-700 transition"
+            @click="stopCamera"
+          >
+            ปิด
+          </button> -->
+        </div>
+      </div>
+      <div />
+    </div>
+
+    <!-- SVG Filters -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+      <defs>
+        <filter id="blurX">
+          <feGaussianBlur stdDeviation="8 0" />
+        </filter>
+        <filter id="blurXBW">
+          <feGaussianBlur stdDeviation="8 0" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <filter id="generalBlur">
+          <feGaussianBlur stdDeviation="8" />
+        </filter>
+      </defs>
+    </svg>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+
+// Constants
+const PHOTO_COUNT = 4;
+const COUNTDOWN_DURATION = 3;
+const PREVIEW_DURATION = 2000;
+const CAPTURE_WIDTH = 600;
+const CAPTURE_QUALITY = 1;
+const CAPTURE_ZOOM = 1; // Zoom level for captured images
+
+// Router
+const router = useRouter();
+
+// State
+const cameraOn = ref(false);
+const isCapturing = ref(false);
+const videoRef = ref<HTMLVideoElement | null>(null);
+const countdown = ref(COUNTDOWN_DURATION);
+const showCountdown = ref(false);
+const capturedImages = ref<string[]>([]);
+const showPreview = ref(false);
+const lastCapturedImage = ref<string | null>(null);
+const currentPhotoIndex = ref(0);
+const selectedFilter = ref("none");
+
+let mediaStream: MediaStream | null = null;
+
+// Filter Definitions
+// const filters = [
+//   { name: "ปกติ", value: "none" },
+//   { name: "Blur X", value: "blurX" },
+//   { name: "Blur X BW", value: "blurXBW" },
+//   { name: "เบลอทั่วไป", value: "blur" },
+//   { name: "ขาวดำ", value: "mono" },
+// ] as const;
+
+// Computed Styles
+const getFilterStyle = (filterValue: string): string => {
+  switch (filterValue) {
+    case "blurX":
+      return "filter: url('#blurX')";
+    case "blurXBW":
+      return "filter: url('#blurXBW')";
+    case "blur":
+      return "filter: url('#generalBlur')";
+    case "mono":
+      return "filter: grayscale(100%)";
+    default:
+      return "filter: none";
+  }
+};
+
+const videoStyle = computed(() => {
+  const filterStyle = getFilterStyle(selectedFilter.value);
+  const zoomStyle = `transform: scale(${CAPTURE_ZOOM})`;
+  return `${filterStyle}; ${zoomStyle}`;
+});
+
+const previewStyle = computed(() => {
+  const filterStyle = getFilterStyle(selectedFilter.value);
+  const zoomStyle = `transform: scale(${CAPTURE_ZOOM})`;
+  return `${filterStyle}; ${zoomStyle}`;
+});
+
+// Camera Functions
+const startCamera = async (): Promise<void> => {
+  try {
+    cameraOn.value = true;
+
+    mediaStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: "user" },
+        width: { ideal: 1920 },
+        height: { ideal: 1080 },
+      },
+      audio: false,
+    });
+
+    if (videoRef.value) {
+      videoRef.value.srcObject = mediaStream;
+      await videoRef.value.play();
+    }
+  } catch (error) {
+    console.error("Camera access failed:", error);
+    alert("ไม่สามารถเปิดกล้องได้ กรุณาตรวจสอบสิทธิ์การเข้าถึงกล้อง");
+    cameraOn.value = false;
+  }
+};
+
+const stopCamera = (): void => {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach((track) => track.stop());
+    mediaStream = null;
+  }
+  cameraOn.value = false;
+  currentPhotoIndex.value = 0;
+};
+
+// Utility
+const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+// Photo Capture Logic
+const capturePhoto = (): void => {
+  if (!videoRef.value) return;
+
+  const video = videoRef.value;
+  const canvas = document.createElement("canvas");
+  const height = Math.floor((1748 / 1240) * CAPTURE_WIDTH);
+
+  canvas.width = CAPTURE_WIDTH;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d", { willReadFrequently: false });
+  if (!ctx) return;
+
+  // Apply filter to canvas
+  ctx.filter = getFilterStyle(selectedFilter.value).replace(/filter:\s*/, "");
+
+  // Calculate crop dimensions for aspect ratio
+  const videoRatio = video.videoWidth / video.videoHeight;
+  const canvasRatio = CAPTURE_WIDTH / height;
+
+  let sx = 0;
+  let sy = 0;
+  let sWidth = video.videoWidth;
+  let sHeight = video.videoHeight;
+
+  if (videoRatio > canvasRatio) {
+    sWidth = video.videoHeight * canvasRatio;
+    sx = (video.videoWidth - sWidth) / 2;
+  } else {
+    sHeight = video.videoWidth / canvasRatio;
+    sy = (video.videoHeight - sHeight) / 2;
+  }
+
+  // Apply zoom to captured image
+  const scaledWidth = CAPTURE_WIDTH * CAPTURE_ZOOM;
+  const scaledHeight = height * CAPTURE_ZOOM;
+  const offsetX = -(scaledWidth - CAPTURE_WIDTH) / 2;
+  const offsetY = -(scaledHeight - height) / 2;
+
+  // Flip horizontally to un-mirror the captured image
+  ctx.translate(CAPTURE_WIDTH, 0);
+  ctx.scale(-1, 1);
+
+  ctx.drawImage(
+    video,
+    sx,
+    sy,
+    sWidth,
+    sHeight,
+    offsetX,
+    offsetY,
+    scaledWidth,
+    scaledHeight
+  );
+
+  const imageData = canvas.toDataURL("image/jpeg", CAPTURE_QUALITY);
+  capturedImages.value.push(imageData);
+};
+
+const startCountdown = (): Promise<void> =>
+  new Promise((resolve) => {
+    showCountdown.value = true;
+    countdown.value = COUNTDOWN_DURATION;
+
+    const interval = setInterval(() => {
+      countdown.value--;
+      if (countdown.value === 0) {
+        clearInterval(interval);
+        setTimeout(() => {
+          showCountdown.value = false;
+          capturePhoto();
+          resolve();
+        }, 500);
+      }
+    }, 1000);
+  });
+
+const startPhotoSequence = async (): Promise<void> => {
+  if (!cameraOn.value || isCapturing.value) return;
+
+  isCapturing.value = true;
+  capturedImages.value = [];
+
+  try {
+    for (let i = 0; i < PHOTO_COUNT; i++) {
+      currentPhotoIndex.value = i + 1;
+
+      await startCountdown();
+
+      // Show preview
+      const lastImage = capturedImages.value[capturedImages.value.length - 1];
+      if (lastImage) {
+        lastCapturedImage.value = lastImage;
+        showPreview.value = true;
+        await delay(PREVIEW_DURATION);
+        showPreview.value = false;
+      }
+
+      // Small delay between photos
+      if (i < PHOTO_COUNT - 1) {
+        await delay(500);
+      }
+    }
+
+    // Save and navigate
+    sessionStorage.setItem(
+      "photoboothImages",
+      JSON.stringify(capturedImages.value)
+    );
+
+    stopCamera();
+    router.push("/photobooth");
+  } catch (error) {
+    console.error("Photo sequence failed:", error);
+    alert("เกิดข้อผิดพลาดในการถ่ายภาพ");
+  } finally {
+    isCapturing.value = false;
+  }
+};
+onMounted(() => {
+  startCamera();
+});
+// Cleanup
+onUnmounted(() => {
+  stopCamera();
+});
+</script>
+
+<style scoped>
+/* Add any custom styles here if needed */
+</style>
+
+<template>
+  <div
+    class="min-h-screen flex flex-col items-center justify-center gap-5 font-archivo"
+  >
+    <!-- Logo -->
+    <header class="flex justify-center">
+      <img
+        src="/logo.png"
+        alt="iDEKTEP Logo"
+        class="md:w-18 md:w-60 lg:w-60">
+     </header>
+
+    <!-- 3-column layout -->
+    <div class="grid grid-cols-[1fr_auto_1fr] items-start">
+      <!-- Filter picker (left column) -->
+      <div class="flex flex-col gap-3">
+        <!-- <div
+          v-for="(filter, index) in filters"
+          :key="index"
+          class="w-12 h-12 rounded-lg border-3 cursor-pointer transition hover:scale-110"
+          :class="
+            selectedFilter === index ? 'border-yellow-400' : 'border-idt2'
+          "
+          :style="{ backgroundColor: filter.color }"
+          @click="selectedFilter = index"
+        /> -->
+      </div>
+
+      <!-- Photobooth (center column) -->
+      <div
+        ref="photoboothRef"
+        class="relative flex flex-col items-center gap-5 p-6 transition md:w-[383px] md:h-[540px]"
+        :style="{
+          backgroundImage: `url(${currentPreset?.background})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }"
+      >
+        <!-- Photo grid -->
+        <div class="grid grid-cols-2 gap-5 w-full z-10">
+          <div
+            v-for="(img, index) in images"
+            :key="index"
+            class="w-full md:w-[160px] md:h-[215px] overflow-hidden bg-black"
+          >
+            <img :src="img" class="w-full h-full object-cover" alt="" >
+          </div>
+        </div>
+
+        <!-- Frame overlay -->
+        <img
+          :src="currentPreset?.frame"
+          class="absolute inset-0 w-full h-full object-cover pointer-events-none z-20"
+          style="mix-blend-mode: normal"
+        >
+      </div>
+
+      <!-- Preset picker (right column) -->
+      <div class="flex flex-col gap-3 ml-6">
+        <div
+          v-for="(preset, index) in presets"
+          :key="index"
+          class="w-12 h-12 rounded-full border-3 cursor-pointer transition hover:scale-110 bg-cover bg-center"
+          :class="
+            selectedPreset === index ? 'border-yellow-400' : 'border-idt2'
+          "
+          :style="{ backgroundImage: `url(${preset.thumbnail})` }"
+          @click="selectPreset(index)"
+        />
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex gap-10">
+      <button
+        class="w-15 h-15 bg-white rounded-full flex items-center justify-center transition shadow-lg hover:bg-faded"
+        :disabled="isProcessing"
+        @click="handleShare"
+      >
+        <i class="fi-rr-share" />
+      </button>
+      <button
+        class="w-15 h-15 bg-white rounded-full flex items-center justify-center transition shadow-lg hover:bg-faded"
+        @click="handleFinish"
+      >
+        <i class="fi-rr-check" />
+      </button>
+      <button
+        class="w-15 h-15 bg-white rounded-full flex items-center justify-center transition shadow-lg hover:bg-faded"
+        :disabled="isProcessing"
+        @click="handleDownload"
+      >
+        <i class="fi-rr-download" />
+      </button>
+    </div>
+
+    <!-- EXPORT ONLY (ไม่แสดงบนจอ) -->
+    <div
+      ref="exportRef"
+      class="export-root"
+      :style="{
+        backgroundImage: `url(${currentPreset?.background})`,
+      }"
+    >
+      <!-- Photo grid with exact positioning to match preview -->
+      <div class="photo-grid">
+        <div
+          v-for="(img, index) in images"
+          :key="index"
+          class="photo-item"
+        >
+          <img :src="img" class="w-full h-full object-cover" alt="" >
+        </div>
+      </div>
+
+      <!-- Frame overlay -->
+      <img
+        :src="currentPreset?.frame"
+        class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style="mix-blend-mode: normal"
+      >
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const images = ref<string[]>([]);
+const exportRef = ref<HTMLElement | null>(null);
+const isProcessing = ref(false);
+const selectedPreset = ref(0);
+// const selectedFilter = ref(0);
+
+// Define presets
+const presets = ref([
+  {
+    id: 1,
+    name: "Default",
+    background: "/img/sticker/bg2.png",
+    frame: "/img/sticker/frame2.png",
+    thumbnail: "/img/sticker/bg2.png",
+  },
+  // Add more presets here as needed
+  {
+    id: 2,
+    name: "Preset 2",
+    background: "/img/sticker/bg3.png",
+    frame: "/img/sticker/frame3.png",
+    thumbnail: "/img/sticker/bg3.png",
+  },
+  {
+    id: 3,
+    name: "Preset 3",
+    background: "/img/sticker/bg4.png",
+    frame: "/img/sticker/frame4.png",
+    thumbnail: "/img/sticker/bg4.png",
+  },
+  {
+    id: 4,
+    name: "Preset 4",
+    background: "/img/sticker/bg5.png",
+    frame: "/img/sticker/frame5.png",
+    thumbnail: "/img/sticker/bg5.png",
+  },
+  {
+    id: 5,
+    name: "Preset 5",
+    background: "/img/sticker/bg6.png",
+    frame: "/img/sticker/frame6.png",
+    thumbnail: "/img/sticker/bg6.png",
+  },
+  {
+    id: 6,
+    name: "Preset 6",
+    background: "/img/sticker/bg7.png",
+    frame: "/img/sticker/frame7.png",
+    thumbnail: "/img/sticker/bg7.png",
+  }
+]);
+
+// Define filters
+// const filters = ref([
+//   { name: "None", color: "transparent" },
+//   { name: "Sepia", color: "#704214" },
+//   { name: "Grayscale", color: "#808080" },
+//   { name: "Warm", color: "#ff9966" },
+//   { name: "Cool", color: "#6699ff" },
+// ]);
+
+const currentPreset = computed(
+  () => presets.value[selectedPreset.value] || presets.value[0]
+);
+
+const selectPreset = (index: number) => {
+  selectedPreset.value = index;
+};
+
+const handleFinish = async () => {
+  images.value = [];
+  isProcessing.value = false;
+
+  // Clear photobooth in sessionStorage
+  sessionStorage.removeItem("photoboothImages");
+  router.push("/");
+};
+
+// Capture photobooth as A6 size at 300 DPI for professional printing
+// Embeds background and frame directly into the image
+const capturePhotobooth = async (): Promise<Blob | null> => {
+  if (!exportRef.value) return null;
+
+  try {
+    const width = 1240;
+    const height = 1748;
+
+    // Create canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+
+    // Helper function to load image
+    const loadImage = (src: string): Promise<HTMLImageElement> => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    };
+
+    // 1. Draw background
+    if (currentPreset.value?.background) {
+      try {
+        const bgImg = await loadImage(currentPreset.value.background);
+        ctx.drawImage(bgImg, 0, 0, width, height);
+      } catch (err) {
+        console.error("Failed to load background:", err);
+        // Fallback to white background
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
+      }
+    } else {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    // 2. Draw photos in grid
+    const photoConfig = {
+      top: 72,
+      left: 72,
+      photoWidth: 528,
+      photoHeight: 706,
+      gap: 40,
+    };
+
+    for (let i = 0; i < images.value.length && i < 4; i++) {
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const x = photoConfig.left + col * (photoConfig.photoWidth + photoConfig.gap);
+      const y = photoConfig.top + row * (photoConfig.photoHeight + photoConfig.gap);
+
+      try {
+        const imageSrc = images.value[i];
+        if (!imageSrc) {
+          throw new Error(`Image at index ${i} is undefined`);
+        }
+        const photoImg = await loadImage(imageSrc);
+        ctx.drawImage(photoImg, x, y, photoConfig.photoWidth, photoConfig.photoHeight);
+      } catch (err) {
+        console.error(`Failed to load photo ${i}:`, err);
+        // Draw placeholder
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(x, y, photoConfig.photoWidth, photoConfig.photoHeight);
+      }
+    }
+
+    // 3. Draw frame overlay on top
+    if (currentPreset.value?.frame) {
+      try {
+        const frameImg = await loadImage(currentPreset.value.frame);
+        ctx.drawImage(frameImg, 0, 0, width, height);
+      } catch (err) {
+        console.error("Failed to load frame:", err);
+      }
+    }
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => resolve(blob), "image/png", 1.0);
+    });
+  } catch (err) {
+    console.error("Error in capturePhotobooth:", err);
+    return null;
+  }
+};
+
+// Share function
+const handleShare = async () => {
+  if (isProcessing.value) return;
+  isProcessing.value = true;
+
+  try {
+    // Capture the photobooth image
+    const blob = await capturePhotobooth();
+    
+    if (!blob) {
+      alert("ไม่สามารถสร้างภาพได้ กรุณาลองอีกครั้ง");
+      return;
+    }
+
+    // Create file for sharing
+    const file = new File([blob], "idektep-photobooth.png", {
+      type: "image/png",
+    });
+
+    // Check if browser supports Web Share API with files
+    if (navigator.share && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "iDEKTEP Photo Booth",
+          text: "Check out my photo booth! 📸",
+        });
+        // Successfully shared
+      } catch (shareError: unknown) {
+        // User cancelled the share dialog
+        if (shareError instanceof Error && shareError.name === "AbortError") {
+          console.log("Share cancelled by user");
+        } else {
+          console.error("Share failed:", shareError);
+          // Fallback to download
+          downloadBlob(blob, "idektep-photobooth.png");
+        }
+      }
+    } else {
+      // Browser doesn't support sharing, download instead
+      downloadBlob(blob, "idektep-photobooth.png");
+      alert("เบราว์เซอร์ไม่รองรับการแชร์ ไฟล์จะถูกดาวน์โหลดแทน");
+    }
+  } catch (error) {
+    console.error("Error in share process:", error);
+    alert("เกิดข้อผิดพลาดในการแชร์");
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
+// Download function
+const handleDownload = async () => {
+  if (isProcessing.value) return;
+  isProcessing.value = true;
+
+  try {
+    // Capture the photobooth image
+    const blob = await capturePhotobooth();
+    
+    if (!blob) {
+      alert("ไม่สามารถสร้างภาพได้ กรุณาลองอีกครั้ง");
+      return;
+    }
+
+    // Generate filename with timestamp
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const filename = `idektep-photobooth-${timestamp}.png`;
+    
+    downloadBlob(blob, filename);
+  } catch (error) {
+    console.error("Error downloading:", error);
+    // alert("เกิดข้อผิดพลาดในการดาวน์โหลด");
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
+// Helper function to download blob
+const downloadBlob = (blob: Blob, filename: string) => {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+onMounted(() => {
+  const data = sessionStorage.getItem("photoboothImages");
+  if (data) {
+    images.value = JSON.parse(data);
+  }
+});
+</script>
+
+<style lang="css" scoped>
+.export-root {
+  width: 1240px;
+  height: 1748px;
+  position: fixed;
+  top: 0;
+  left: -99999px; /* Hide off-screen */
+  background-size: cover;
+  background-position: center;
+}
+
+/* Photo grid positioning - matches the expected layout */
+.photo-grid {
+  position: absolute;
+  top: 72px; /* Adjust to match your frame's top padding */
+  left: 72px; /* Adjust to match your frame's left padding */
+  width: 1096px; /* Total width for 2 columns with gap */
+  height: 1604px; /* Total height for 2 rows with gap */
+  display: grid;
+  grid-template-columns: 528px 528px;
+  grid-template-rows: 706px 706px;
+  gap: 40px;
+  z-index: 1;
+}
+
+.photo-item {
+  width: 528px;
+  height: 706px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Frame overlay - must be on top */
+.export-root > img {
+  z-index: 100 !important;
+}
+</style>

@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Damion&family=League+Spartan:wght@100..900&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css');
+@import 'tailwindcss';
+
+@theme {
+  --font-archivo: 'Archivo Black', sans-serif;
+  --font-damion: 'Damion', cursive;
+  --color-idektep: #73408a;
+  --color-idt2: #5D416E;
+  --color-idt3: #7F4099;
+  --color-faded: #D9D9D9;
+  --color-idt4: #A681BA;
+  /* font-weight: 400;
+  font-style: normal; */
+}
+
+html, body {
+  background-color: #A681BA;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /* overflow: hidden; */
+}
+
+body::before {
+  content: "";
+  display: block;
+  height: env(safe-area-inset-top);
+  background-color: #A681BA; /* สีเดียวกับ theme-color */
+}
