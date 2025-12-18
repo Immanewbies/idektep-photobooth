@@ -204,7 +204,7 @@ import { useRouter } from "vue-router";
 const PHOTO_COUNT = 4;
 const COUNTDOWN_DURATION = 3;
 const PREVIEW_DURATION = 1500;
-const CAPTURE_WIDTH = 1240;
+const CAPTURE_WIDTH = 1000;
 const CAPTURE_QUALITY = 1;
 // const CAPTURE_ZOOM = 1;
 
