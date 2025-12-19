@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative p-4 sm:p-6 lg:p-4 xl:p-10 min-h-screen font-archivo overflow-hidden flex flex-col justify-center items-center gap-6 lg:gap-1 bg-[#00353A]"
+    class="relative p-4 sm:p-6 lg:p-4 xl:p-10 min-h-screen overflow-hidden flex flex-col justify-center lg:justify-start items-center gap-6 font-archivo"
   >
     <div class="pointer-events-none absolute inset-0 z-0 opacity-20">
       <div class="snow" />
@@ -10,23 +10,23 @@
       class="relative z-10 flex flex-col justify-center items-center select-none scale-100 md:scale-100"
     >
       <div class="relative">
-        <p class="font-archivo md:text-4xl lg:text-lg text-white relative">
+        <p class="font-archivo md:text-4xl lg:text-2xl xl:text-5xl text-white relative">
           iDEKTEP
         </p>
       </div>
 
       <div class="relative">
         <p
-          class="font-damion md:text-4xl lg:text-lg text-[#C80931] relative md:-mt-6.5 lg:-mt-5.5 drop-shadow-md"
+          class="font-damion md:text-4xl lg:text-2xl xl:text-5xl text-[#C80931] relative md:-mt-6.5 lg:-mt-5.5 xl:-mt-7.5 drop-shadow-md"
         >
           photo booth
         </p>
 
         <div
-          class="absolute -right-4 -bottom-1 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
+          class="absolute -right-4 -bottom-3 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="md:text-[6px] lg:text-[4px] uppercase tracking-[0.2em] text-white/90 font-medium"
+            class="md:text-[6px] lg:text-[4.5px] xl:text-[6px] uppercase tracking-[0.2em] text-white/90 font-medium"
           >
             Christmas Edition
           </p>
@@ -44,14 +44,12 @@
 
       <div class="flex flex-col items-center gap-6">
         <div
-          class="relative md:w-[493px] md:h-[698px] w-[320px] h-[452px] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10"
+          class="relative md:w-[493px] md:h-[698px] lg:w-[420px] lg:h-[625px] xl:w-[620px] xl:h-[850px] w-[320px] h-[452px] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10"
         >
           <div
             class="absolute top-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1 rounded-full text-sm font-bold z-20 flex items-center gap-2"
           >
-            <span
-              class="w-2 h-2 rounded-full bg-[#C80931] animate-pulse"
-            />
+            <span class="w-2 h-2 rounded-full bg-[#C80931] animate-pulse" />
             {{ currentPhotoIndex }} / 4
           </div>
 
@@ -176,10 +174,8 @@
         <span class="animate-bounce-slow delay-500">❄</span>
       </div>
     </div>
-    
-    <footer
-      class="z-10 text-white/20 text-xs tracking-[0.5em] uppercase item-center justify-center"
-    >
+
+    <footer class="absolute bottom-6 text-[10px] text-white/20 tracking-[0.4em] uppercase">
       Copyright © 2025 iDektep. All rights reserved.
     </footer>
 
@@ -419,5 +415,15 @@ onUnmounted(() => stopCamera());
   50% {
     transform: translateY(-20px);
   }
+}
+</style>
+
+<style>
+html,
+body {
+  background-color: #00353a;
+}
+body::before {
+  background-color: #00353a;
 }
 </style>

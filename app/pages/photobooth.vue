@@ -10,23 +10,23 @@
       class="relative z-10 flex flex-col justify-center items-center select-none scale-100 md:scale-100"
     >
       <div class="relative">
-        <p class="font-archivo md:text-4xl lg:text-4xl text-white relative">
+        <p class="font-archivo md:text-4xl lg:text-4xl xl:text-5xl text-white relative">
           iDEKTEP
         </p>
       </div>
 
       <div class="relative">
         <p
-          class="font-damion md:text-4xl lg:text-4xl text-[#C80931] relative md:-mt-6.5 lg:-mt-6.5 drop-shadow-md"
+          class="font-damion md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative md:-mt-6.5 lg:-mt-7.5 drop-shadow-md"
         >
           photo booth
         </p>
 
         <div
-          class="absolute -right-4 -bottom-1 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
+          class="absolute -right-4 -bottom-3 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="md:text-[6px] lg:text-[6px] uppercase tracking-[0.2em] text-white/90 font-medium"
+            class="md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase tracking-[0.2em] text-white/90 font-medium"
           >
             Christmas Edition
           </p>
@@ -108,9 +108,9 @@
       </button>
     </div>
 
-    <div class="absolute bottom-6 text-[10px] text-white/20 tracking-[0.4em] uppercase">
-      Seasonal Memories • Printed with Joy
-    </div>
+    <footer class="absolute bottom-6 text-[10px] text-white/20 tracking-[0.4em] uppercase">
+      Copyright © 2025 iDektep. All rights reserved.
+    </footer>
 
     <div ref="exportRef" class="export-root" :style="{ backgroundImage: `url(${currentPreset?.background})` }">
       <div class="photo-grid">
@@ -258,4 +258,13 @@ onMounted(() => {
 ::-webkit-scrollbar { height: 4px; }
 ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
 ::-webkit-scrollbar-thumb { background: #C80931; border-radius: 10px; }
+</style>
+
+<style>
+    html,body {
+    background-color: #00353A;
+  }
+  body::before {
+    background-color: #00353A;
+  }
 </style>

@@ -65,21 +65,13 @@ const toggleEasterEgg = () => {
       />
     </a>
 
-    <footer
-      class="absolute bottom-8 z-10 text-white/20 text-xs tracking-[0.5em] uppercase item-center justify-center"
-    >
+    <footer class="absolute bottom-6 text-[10px] text-white/20 tracking-[0.4em] uppercase">
       Copyright © 2025 iDektep. All rights reserved.
     </footer>
   </div>
 </template>
 
 <style scoped>
-  body {
-    background-color: #00353A;
-  }
-  body::before {
-    background-color: #00353A;
-  }
 /* Minimalist Snowfall Effect */
 .snow {
   background: radial-gradient(circle at center, #fff 1px, transparent 1px);
@@ -113,4 +105,13 @@ const toggleEasterEgg = () => {
 .animate-bounce-short {
   animation: bounce-short 2s ease-in-out infinite;
 }
+</style>
+
+<style>
+    html,body {
+    background-color: #00353A;
+  }
+  body::before {
+    background-color: #00353A;
+  }
 </style>
