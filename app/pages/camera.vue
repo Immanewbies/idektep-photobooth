@@ -26,7 +26,7 @@
           class="absolute -right-4 -bottom-3 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="md:text-[6px] lg:text-[4.5px] xl:text-[6px] uppercase tracking-[0.2em] text-white/90 font-medium"
+            class="md:text-[6px] lg:text-[4.5px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
           >
             Christmas Edition
           </p>

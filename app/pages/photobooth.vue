@@ -17,7 +17,7 @@
 
       <div class="relative">
         <p
-          class="font-damion md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative md:-mt-6.5 lg:-mt-7.5 drop-shadow-md"
+          class="font-damion md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
         >
           photo booth
         </p>
@@ -26,7 +26,7 @@
           class="absolute -right-4 -bottom-3 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase tracking-[0.2em] text-white/90 font-medium"
+            class="md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
           >
             Christmas Edition
           </p>

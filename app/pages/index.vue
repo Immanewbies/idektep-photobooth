@@ -31,14 +31,14 @@ const toggleEasterEgg = () => {
           🎅
         </span>
 
-        <p class="font-archivo text-7xl text-white tracking-wider relative">
+        <p class="font-archivo text-7xl text-white relative">
           iDEKTEP
         </p>
       </div>
 
       <div class="relative">
         <p
-          class="font-damion text-7xl text-[#C80931] relative tracking-wider -mt-11.5 drop-shadow-md"
+          class="font-damion text-7xl text-[#C80931] relative -mt-11.5 drop-shadow-md"
         >
           photo booth
         </p>
@@ -47,7 +47,7 @@ const toggleEasterEgg = () => {
           class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="text-[10px] uppercase tracking-[0.2em] text-white/90 font-medium"
+            class="text-xs uppercase text-white/90 font-medium whitespace-nowrap"
           >
             Christmas Edition
           </p>
