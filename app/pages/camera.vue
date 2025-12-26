@@ -58,7 +58,7 @@
             autoplay
             playsinline
             muted
-            class="w-full h-full object-cover scale-x-[-1] scale-y-[-1] transition-filter duration-500"
+            class="w-full h-full object-cover scale-y-[-1] transition-filter duration-500"
             :class="{
               'blur-[2px] brightness-110': showCountdown && countdown === 1,
             }"
@@ -78,11 +78,11 @@
 
           <div
             v-if="showPreview && lastCapturedImage"
-            class="absolute inset-0 bg-black flex items-center justify-center z-20"
+            class="absolute inset-0 bg-black flex items-center justify-center z-20 scale-y-[-1]"
           >
             <img
               :src="lastCapturedImage"
-              class="w-full h-full object-cover scale-x-[-1] scale-y-[-1]"
+              class="w-full h-full object-cover scale-y-[-1]"
               :style="previewStyle"
               alt="Preview"
             >
@@ -301,8 +301,8 @@ const capturePhoto = () => {
   ctx.save();
 
 // กลับหัว + mirror
-ctx.translate(CAPTURE_WIDTH, height);
-ctx.scale(-1, -1);
+ctx.translate(0, height);
+ctx.scale(1, -1);
 
 ctx.drawImage(
   video,
