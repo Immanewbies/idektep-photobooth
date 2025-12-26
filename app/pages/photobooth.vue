@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen flex flex-col items-center justify-center gap-8 font-archivo bg-[#00353A] relative overflow-hidden p-4"
+    class="min-h-screen flex flex-col items-center justify-center gap-4 sm:gap-4 md:gap-6 lg:gap-8 font-archivo bg-[#00353A] relative overflow-hidden p-4"
   >
     <div class="pointer-events-none absolute inset-0 z-0 opacity-20">
       <div class="snow" />
@@ -10,14 +10,16 @@
       class="relative z-10 flex flex-col justify-center items-center select-none scale-100 md:scale-100"
     >
       <div class="relative">
-        <p class="font-archivo md:text-4xl lg:text-4xl xl:text-5xl text-white relative">
+        <p
+          class="font-archivo text-lg md:text-4xl lg:text-4xl xl:text-5xl text-white relative"
+        >
           iDEKTEP
         </p>
       </div>
 
       <div class="relative">
         <p
-          class="font-damion md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
+          class="font-damion text-lg md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative -mt-5.5 md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
         >
           photo booth
         </p>
@@ -26,7 +28,7 @@
           class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
+            class="text-[4px] md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
           >
             Christmas Edition
           </p>
@@ -34,8 +36,9 @@
       </div>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-[120px_auto_120px] items-center gap-8 relative z-10">
-      
+    <div
+      class="grid grid-cols-1 lg:grid-cols-[120px_auto_120px] items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 relative z-10"
+    >
       <div class="hidden lg:block" />
 
       <div
@@ -46,7 +49,7 @@
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           width: '340px',
-          height: '480px'
+          height: '480px',
         }"
       >
         <div class="grid grid-cols-2 gap-4 w-full z-10 -mt-2">
@@ -55,25 +58,31 @@
             :key="index"
             class="w-full aspect-1 overflow-hidden bg-black shadow-inner"
           >
-            <img :src="img" class="w-full h-full object-cover" alt="">
+            <img :src="img" class="w-full h-full object-cover" alt="" >
           </div>
         </div>
 
         <img
           :src="currentPreset?.frame"
           class="absolute inset-0 w-full h-full object-cover pointer-events-none z-20"
-        >
+        />
       </div>
 
-      <div class="flex flex-row lg:flex-col gap-4 overflow-x-auto py-2">
+      <div
+        class="flex flex-row justify-center lg:flex-col gap-4 overflow-x-auto py-2"
+      >
         <div
           v-for="(preset, index) in presets"
           :key="index"
-          class="w-14 h-14 rounded-full border-2 cursor-pointer transition-all duration-300 hover:scale-110 flex-shrink-0 p-0.5"
-          :class="selectedPreset === index ? 'border-[#C80931] bg-[#C80931]' : 'border-white/20 bg-white/5'"
+          class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full border-2 cursor-pointer transition-all duration-300 hover:scale-110 flex-shrink-0 p-0.5"
+          :class="
+            selectedPreset === index
+              ? 'border-[#C80931] bg-[#C80931]'
+              : 'border-white/20 bg-white/5'
+          "
           @click="selectPreset(index)"
         >
-          <div 
+          <div
             class="w-full h-full rounded-full bg-cover bg-center"
             :style="{ backgroundImage: `url(${preset.thumbnail})` }"
           />
@@ -81,44 +90,60 @@
       </div>
     </div>
 
-    <div class="flex gap-6 relative z-10">
+    <!-- Container ปุ่ม -->
+    <div class="flex gap-6 relative z-10 mb-16">
+      <!-- เพิ่ม mb-16 หรือ px-6 ให้เว้นที่ footer -->
       <button
-        class="group w-14 h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-all hover:bg-[#C80931] hover:border-[#C80931]"
+        class="group w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-all hover:bg-[#C80931] hover:border-[#C80931]"
         title="Share"
         :disabled="isProcessing"
         @click="handleShare"
       >
-        <i class="fi-rr-share text-white group-hover:scale-110 transition-transform" />
+        <i
+          class="fi-rr-share text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl text-white group-hover:scale-110 transition-transform"
+        />
       </button>
 
       <button
-        class="w-14 h-14 bg-[#C80931] text-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg"
+        class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-[#C80931] text-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg"
         @click="handleFinish"
       >
-        <i class="fi-rr-check text-xl" />
+        <i class="fi-rr-check text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl" />
       </button>
 
       <button
-        class="group w-14 h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-all hover:bg-[#C80931] hover:border-[#C80931]"
+        class="group w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-all hover:bg-[#C80931] hover:border-[#C80931]"
         title="Download"
         :disabled="isProcessing"
         @click="handleDownload"
       >
-        <i class="fi-rr-download text-white group-hover:scale-110 transition-transform" />
+        <i
+          class="fi-rr-download text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl text-white group-hover:scale-110 transition-transform"
+        />
       </button>
     </div>
 
-    <footer class="absolute bottom-6 text-[10px] text-white/20 tracking-[0.4em] uppercase">
+    <!-- Footer -->
+    <footer
+      class="absolute bottom-6 md:bottom-6 text-[7px] sm:text-[8px] md:text-[8px] lg:text-[10px] xl:text-[10px] text-white/20 tracking-[0.4em] uppercase"
+    >
       Copyright © 2025 iDektep. All rights reserved.
     </footer>
 
-    <div ref="exportRef" class="export-root" :style="{ backgroundImage: `url(${currentPreset?.background})` }">
+    <div
+      ref="exportRef"
+      class="export-root"
+      :style="{ backgroundImage: `url(${currentPreset?.background})` }"
+    >
       <div class="photo-grid">
         <div v-for="(img, index) in images" :key="index" class="photo-item">
-          <img :src="img" class="w-full h-full object-cover">
+          <img :src="img" class="w-full h-full object-cover" />
         </div>
       </div>
-      <img :src="currentPreset?.frame" class="absolute inset-0 w-full h-full object-cover z-[100]">
+      <img
+        :src="currentPreset?.frame"
+        class="absolute inset-0 w-full h-full object-cover z-[100]"
+      />
     </div>
   </div>
 </template>
@@ -136,15 +161,49 @@ const isProcessing = ref(false);
 const selectedPreset = ref(0);
 
 const presets = ref([
-  { id: 1, name: "Default", background: "/img/xmas/bg1.png", frame: "/img/xmas/frame1.png", thumbnail: "/img/xmas/bg1.png" },
-  { id: 2, name: "Preset 2", background: "/img/xmas/bg2.png", frame: "/img/xmas/frame2.png", thumbnail: "/img/xmas/bg2.png" },
-  { id: 3, name: "Preset 3", background: "/img/xmas/bg3.png", frame: "/img/xmas/frame3.png", thumbnail: "/img/xmas/bg3.png" },
-  { id: 4, name: "Preset 4", background: "/img/xmas/bg4.png", frame: "/img/xmas/frame4.png", thumbnail: "/img/xmas/bg4.png" },
-  { id: 5, name: "Preset 5", background: "/img/xmas/bg5.png", frame: "/img/xmas/frame5.png", thumbnail: "/img/xmas/bg5.png" },
+  {
+    id: 1,
+    name: "Default",
+    background: "/img/xmas/bg1.png",
+    frame: "/img/xmas/frame1.png",
+    thumbnail: "/img/xmas/bg1.png",
+  },
+  {
+    id: 2,
+    name: "Preset 2",
+    background: "/img/xmas/bg2.png",
+    frame: "/img/xmas/frame2.png",
+    thumbnail: "/img/xmas/bg2.png",
+  },
+  {
+    id: 3,
+    name: "Preset 3",
+    background: "/img/xmas/bg3.png",
+    frame: "/img/xmas/frame3.png",
+    thumbnail: "/img/xmas/bg3.png",
+  },
+  {
+    id: 4,
+    name: "Preset 4",
+    background: "/img/xmas/bg4.png",
+    frame: "/img/xmas/frame4.png",
+    thumbnail: "/img/xmas/bg4.png",
+  },
+  {
+    id: 5,
+    name: "Preset 5",
+    background: "/img/xmas/bg5.png",
+    frame: "/img/xmas/frame5.png",
+    thumbnail: "/img/xmas/bg5.png",
+  },
 ]);
 
-const currentPreset = computed(() => presets.value[selectedPreset.value] || presets.value[0]);
-const selectPreset = (index: number) => { selectedPreset.value = index; };
+const currentPreset = computed(
+  () => presets.value[selectedPreset.value] || presets.value[0]
+);
+const selectPreset = (index: number) => {
+  selectedPreset.value = index;
+};
 
 const handleFinish = async () => {
   isProcessing.value = true;
@@ -156,10 +215,13 @@ const handleFinish = async () => {
       // แก้ไขตรงนี้: ใส่เครื่องหมาย ` ` หรือ ' ' ครอบชื่อไฟล์
       fd.append("file", blob, `idektep-photobooth-${Date.now()}.png`);
 
-      const response = await fetch("https://idektep-photobooth-backend.onrender.com/upload", {
-        method: "POST",
-        body: fd,
-      });
+      const response = await fetch(
+        "https://idektep-photobooth-backend.onrender.com/upload",
+        {
+          method: "POST",
+          body: fd,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -188,13 +250,14 @@ const capturePhotobooth = async (): Promise<Blob | null> => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
-  const loadImage = (src: string): Promise<HTMLImageElement> => new Promise((res, rej) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => res(img);
-    img.onerror = rej;
-    img.src = src;
-  });
+  const loadImage = (src: string): Promise<HTMLImageElement> =>
+    new Promise((res, rej) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => res(img);
+      img.onerror = rej;
+      img.src = src;
+    });
 
   if (currentPreset.value?.background) {
     const bg = await loadImage(currentPreset.value.background);
@@ -208,7 +271,13 @@ const capturePhotobooth = async (): Promise<Blob | null> => {
     const imgSrc = images.value[i];
     if (imgSrc) {
       const img = await loadImage(imgSrc);
-      ctx.drawImage(img, cfg.left + col*(cfg.w+cfg.gap), cfg.top + row*(cfg.h+cfg.gap), cfg.w, cfg.h);
+      ctx.drawImage(
+        img,
+        cfg.left + col * (cfg.w + cfg.gap),
+        cfg.top + row * (cfg.h + cfg.gap),
+        cfg.w,
+        cfg.h
+      );
     }
   }
 
@@ -217,7 +286,7 @@ const capturePhotobooth = async (): Promise<Blob | null> => {
     ctx.drawImage(fr, 0, 0, width, height);
   }
 
-  return new Promise(res => canvas.toBlob(b => res(b), "image/png", 1.0));
+  return new Promise((res) => canvas.toBlob((b) => res(b), "image/png", 1.0));
 };
 
 const handleDownload = async () => {
@@ -238,7 +307,7 @@ const handleShare = async () => {
   const blob = await capturePhotobooth();
   if (blob && navigator.share) {
     const file = new File([blob], "booth.png", { type: "image/png" });
-    await navigator.share({ files: [file], title: 'iDEKTEP' }).catch(() => {});
+    await navigator.share({ files: [file], title: "iDEKTEP" }).catch(() => {});
   }
   isProcessing.value = false;
 };
@@ -250,7 +319,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Damion&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Damion&display=swap");
 
 .snow {
   background: radial-gradient(circle at center, #fff 1px, transparent 1px);
@@ -263,35 +332,60 @@ onMounted(() => {
 }
 
 @keyframes snowfall {
-  from { transform: translateY(0); }
-  to { transform: translateY(50%); }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(50%);
+  }
 }
 
 .export-root {
-  width: 1240px; height: 1748px;
-  position: fixed; left: -9999px;
+  width: 1240px;
+  height: 1748px;
+  position: fixed;
+  left: -9999px;
   background-size: cover;
 }
 
 .photo-grid {
-  position: absolute; top: 72px; left: 72px;
-  width: 1096px; height: 1604px;
-  display: grid; grid-template-columns: 528px 528px; grid-template-rows: 706px 706px; gap: 40px;
+  position: absolute;
+  top: 72px;
+  left: 72px;
+  width: 1096px;
+  height: 1604px;
+  display: grid;
+  grid-template-columns: 528px 528px;
+  grid-template-rows: 706px 706px;
+  gap: 40px;
 }
 
-.photo-item { width: 528px; height: 706px; background: #000; overflow: hidden; }
+.photo-item {
+  width: 528px;
+  height: 706px;
+  background: #000;
+  overflow: hidden;
+}
 
 /* Custom Scrollbar for Presets */
-::-webkit-scrollbar { height: 4px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-::-webkit-scrollbar-thumb { background: #C80931; border-radius: 10px; }
+::-webkit-scrollbar {
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: #c80931;
+  border-radius: 10px;
+}
 </style>
 
 <style>
-    html,body {
-    background-color: #00353A;
-  }
-  body::before {
-    background-color: #00353A;
-  }
+html,
+body {
+  background-color: #00353a;
+}
+body::before {
+  background-color: #00353a;
+}
 </style>

@@ -9,7 +9,7 @@ const toggleEasterEgg = () => {
 
 <template>
   <div
-    class="relative p-4 min-h-screen font-archivo overflow-hidden flex flex-col justify-center items-center gap-12 bg-[#00353A] selection:bg-[#C80931]/30"
+    class="relative overflow-hidden p-4 min-h-screen font-archivo flex flex-col justify-center items-center gap-8 sm:gap-8 md:gap-8 lg:gap-10 xl:gap-12 bg-[#00353A] selection:bg-[#C80931]/30"
   >
     <div class="pointer-events-none absolute inset-0 z-0 opacity-30">
       <div class="snow" />
@@ -31,23 +31,21 @@ const toggleEasterEgg = () => {
           🎅
         </span>
 
-        <p class="font-archivo text-7xl text-white relative">
-          iDEKTEP
-        </p>
+        <p class="font-archivo text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white relative">iDEKTEP</p>
       </div>
 
       <div class="relative">
         <p
-          class="font-damion text-7xl text-[#C80931] relative -mt-11.5 drop-shadow-md"
+          class="font-damion text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-[#C80931] relative -mt-7 sm:-mt-7 md:-mt-7.5 lg:-mt-9.5 xl:-mt-11.5 drop-shadow-md"
         >
           photo booth
         </p>
 
         <div
-          class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
+          class="absolute -bottom-4 sm:-bottom-4 md:-bottom-6 lg:-bottom-6 xl:-bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="text-xs uppercase text-white/90 font-medium whitespace-nowrap"
+            class="text-[7px] xs:text-xs sm:text-xs md:text-sm lg:text-sm xl:text-sm uppercase text-white/90 font-medium whitespace-nowrap"
           >
             Christmas Edition
           </p>
@@ -57,15 +55,15 @@ const toggleEasterEgg = () => {
 
     <a
       href="/camera"
-      class="group relative z-10 overflow-hidden rounded-full bg-[#C80931] px-12 py-4 text-xl font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(200,9,49,0.5)] active:scale-95"
+      class="group relative z-10 rounded-full bg-[#C80931] px-8 py-3 sm:px-10 sm:py-3 md:px-12 md:py-4 lg:px-16 lg:py-5 text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(200,9,49,0.5)] active:scale-95"
     >
       <span class="relative z-10 tracking-[0.1em]">START</span>
-      <div
-        class="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-500 group-hover:translate-x-0"
-      />
     </a>
 
-    <footer class="absolute bottom-6 text-[10px] text-white/20 tracking-[0.4em] uppercase">
+    <!-- Footer -->
+    <footer
+      class="absolute bottom-10 md:bottom-6 z-50 text-[7px] sm:text-[8px] md:text-[8px] lg:text-[10px] xl:text-[10px] text-white/20 tracking-[0.4em] uppercase"
+    >
       Copyright © 2025 iDektep. All rights reserved.
     </footer>
   </div>
@@ -108,10 +106,11 @@ const toggleEasterEgg = () => {
 </style>
 
 <style>
-    html,body {
-    background-color: #00353A;
-  }
-  body::before {
-    background-color: #00353A;
-  }
+html,
+body {
+  background-color: #00353a;
+}
+body::before {
+  background-color: #00353a;
+}
 </style>

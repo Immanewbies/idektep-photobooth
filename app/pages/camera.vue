@@ -1,11 +1,13 @@
 <template>
   <div
-    class="relative p-4 sm:p-6 lg:p-4 xl:p-10 min-h-screen overflow-hidden flex flex-col justify-center lg:justify-start items-center gap-6 font-archivo"
+    class="relative p-4 sm:p-6 lg:p-4 xl:p-10 min-h-screen overflow-hidden flex flex-col justify-center items-center gap-6 font-archivo"
   >
+    <!-- Snow effect -->
     <div class="pointer-events-none absolute inset-0 z-0 opacity-20">
       <div class="snow" />
     </div>
 
+    <!-- Header -->
     <header
       class="relative z-10 flex flex-col justify-center items-center select-none scale-100 md:scale-100"
     >
@@ -34,18 +36,22 @@
       </div>
     </header>
 
+    <!-- Main content -->
     <div
-      class="grid grid-cols-[1fr_auto_1fr] items-center w-full max-w-6xl relative z-10"
+      class="w-full max-w-6xl relative z-10 flex flex-col justify-center items-center md:grid md:grid-cols-[1fr_auto_1fr] md:items-center gap-6"
     >
+      <!-- Left snow animation (desktop) -->
       <div class="hidden md:flex flex-col gap-4 text-white/10 text-6xl">
         <span class="animate-bounce-slow">❄</span>
         <span class="animate-bounce-slow delay-300">❆</span>
       </div>
 
+      <!-- Center: video + capture button -->
       <div class="flex flex-col items-center gap-6">
         <div
-          class="relative md:w-[493px] md:h-[698px] lg:w-[420px] lg:h-[625px] xl:w-[620px] xl:h-[850px] w-[320px] h-[452px] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10"
+          class="relative w-[320px] h-[452px] md:w-[493px] md:h-[698px] lg:w-[420px] lg:h-[625px] xl:w-[620px] xl:h-[850px] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 flex flex-col justify-center items-center"
         >
+          <!-- Photo index -->
           <div
             class="absolute top-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1 rounded-full text-sm font-bold z-20 flex items-center gap-2"
           >
@@ -53,18 +59,18 @@
             {{ currentPhotoIndex }} / 4
           </div>
 
+          <!-- Video -->
           <video
             ref="videoRef"
             autoplay
             playsinline
             muted
             class="w-full h-full object-cover scale-x-[-1] transition-filter duration-500"
-            :class="{
-              'blur-[2px] brightness-110': showCountdown && countdown === 1,
-            }"
+            :class="{ 'blur-[2px] brightness-110': showCountdown && countdown === 1 }"
             :style="videoStyle"
           />
 
+          <!-- Countdown -->
           <div
             v-if="showCountdown"
             class="absolute inset-0 flex items-center justify-center text-white text-9xl font-bold bg-black/40 z-30 font-archivo"
@@ -76,6 +82,7 @@
             </span>
           </div>
 
+          <!-- Preview -->
           <div
             v-if="showPreview && lastCapturedImage"
             class="absolute inset-0 bg-black flex items-center justify-center z-20 scale-x-[-1]"
@@ -86,13 +93,12 @@
               :style="previewStyle"
               alt="Preview"
             >
-            <div
-              class="absolute inset-0 bg-white animate-flash pointer-events-none"
-            />
+            <div class="absolute inset-0 bg-white animate-flash pointer-events-none" />
           </div>
 
+          <!-- Capture button -->
           <div
-            class="hidden lg:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-3 z-40"
+            class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-40"
           >
             <button
               :disabled="!cameraOn || isCapturing"
@@ -105,80 +111,32 @@
               />
               <div
                 class="w-16 h-16 rounded-full transition-all duration-300 flex items-center justify-center shadow-xl"
-                :class="[
-                  isCapturing
-                    ? 'bg-[#C80931] scale-90'
-                    : 'bg-white hover:bg-white/90',
-                  !cameraOn && 'opacity-50 cursor-not-allowed',
-                ]"
+                :class="[isCapturing ? 'bg-[#C80931] scale-90' : 'bg-white hover:bg-white/90', !cameraOn && 'opacity-50 cursor-not-allowed']"
               >
-                <div
-                  v-if="!isCapturing"
-                  class="w-12 h-12 rounded-full border border-[#00353A]/10"
-                />
-                <span
-                  v-else
-                  class="text-white text-[10px] font-bold animate-pulse tracking-tighter"
-                  >SHOT</span
-                >
+                <div v-if="!isCapturing" class="w-12 h-12 rounded-full border border-[#00353A]/10" />
+                <span v-else class="text-white text-[10px] font-bold animate-pulse tracking-tighter">SHOT</span>
               </div>
             </button>
-            <p
-              class="text-white/60 text-[8px] uppercase tracking-[0.3em] font-bold drop-shadow-md"
-            >
+            <p class="text-white/60 text-[8px] uppercase tracking-[0.3em] font-bold drop-shadow-md">
               Start Sequence
             </p>
           </div>
         </div>
-
-        <div class="lg:hidden flex flex-col items-center gap-4">
-          <button
-            :disabled="!cameraOn || isCapturing"
-            class="relative group flex items-center justify-center"
-            @click="startPhotoSequence"
-          >
-            <div
-              class="absolute inset-0 rounded-full border-2 border-white/20 scale-125 transition-transform group-hover:scale-135"
-              :class="{ 'border-[#C80931]': isCapturing }"
-            />
-            <div
-              class="w-20 h-20 rounded-full transition-all duration-300 flex items-center justify-center shadow-xl"
-              :class="[
-                isCapturing
-                  ? 'bg-[#C80931] scale-90'
-                  : 'bg-white hover:bg-white/90',
-                !cameraOn && 'opacity-50 cursor-not-allowed',
-              ]"
-            >
-              <div
-                v-if="!isCapturing"
-                class="w-16 h-16 rounded-full border-2 border-[#00353A]/10"
-              />
-              <span v-else class="text-white text-xs font-bold animate-pulse"
-                >SHOT</span
-              >
-            </div>
-          </button>
-          <p
-            class="text-white/40 text-[10px] uppercase tracking-widest font-medium"
-          >
-            Click to start sequence
-          </p>
-        </div>
       </div>
 
-      <div
-        class="hidden md:flex flex-col gap-4 text-white/10 text-6xl items-end"
-      >
+      <!-- Right snow animation (desktop) -->
+      <div class="hidden md:flex flex-col gap-4 text-white/10 text-6xl items-end">
         <span class="animate-bounce-slow delay-150">❆</span>
         <span class="animate-bounce-slow delay-500">❄</span>
       </div>
     </div>
 
-    <footer class="absolute bottom-6 text-[10px] text-white/20 tracking-[0.4em] uppercase">
+    <!-- Footer -->
+    <footer class="absolute bottom-6 text-[7px] sm:text-[8px] md:text-[8px] lg:text-[10px] xl:text-[10px] text-white/20 tracking-[0.4em] uppercase">
       Copyright © 2025 iDektep. All rights reserved.
     </footer>
 
+    <!-- Filters -->
     <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
       <defs>
         <filter id="blurX"><feGaussianBlur stdDeviation="8 0" /></filter>
@@ -191,6 +149,7 @@
     </svg>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, computed, onUnmounted, onMounted } from "vue";
