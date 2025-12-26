@@ -146,9 +146,36 @@ const presets = ref([
 const currentPreset = computed(() => presets.value[selectedPreset.value] || presets.value[0]);
 const selectPreset = (index: number) => { selectedPreset.value = index; };
 
-const handleFinish = () => {
-  sessionStorage.removeItem("photoboothImages");
-  router.push("/");
+const handleFinish = async () => {
+  isProcessing.value = true;
+
+  try {
+    const blob = await capturePhotobooth();
+    if (blob) {
+      const fd = new FormData();
+      // แก้ไขตรงนี้: ใส่เครื่องหมาย ` ` หรือ ' ' ครอบชื่อไฟล์
+      fd.append("file", blob, `idektep-photobooth-${Date.now()}.png`);
+
+      const response = await fetch("http://127.0.0.1:8080/upload", {
+        method: "POST",
+        body: fd,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Upload failed:", errorData.error);
+        alert("Upload failed: " + errorData.error);
+      } else {
+        console.log("Upload success!");
+      }
+    }
+  } catch (err) {
+    console.error("Error:", err);
+  } finally {
+    isProcessing.value = false;
+    sessionStorage.clear();
+    router.replace("/");
+  }
 };
 
 const capturePhotobooth = async (): Promise<Blob | null> => {
@@ -200,7 +227,7 @@ const handleDownload = async () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `christmas-booth-${Date.now()}.png`;
+    a.download = `idektep-photobooth-${Date.now()}.png`;
     a.click();
   }
   isProcessing.value = false;
@@ -210,7 +237,7 @@ const handleShare = async () => {
   isProcessing.value = true;
   const blob = await capturePhotobooth();
   if (blob && navigator.share) {
-    const file = new File([blob], "booth.png", { type: "image/png" });
+    const file = new File([blob], `idektep-photobooth-${Date.now()}.png`, { type: "image/png" });
     await navigator.share({ files: [file], title: 'iDEKTEP' }).catch(() => {});
   }
   isProcessing.value = false;
@@ -223,7 +250,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Damion&display=swap');
 
 .snow {
   background: radial-gradient(circle at center, #fff 1px, transparent 1px);
