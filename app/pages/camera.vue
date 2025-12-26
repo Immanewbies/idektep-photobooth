@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative p-4 sm:p-6 lg:p-4 xl:p-10 min-h-screen overflow-hidden flex flex-col justify-center items-center gap-6 font-archivo"
+    class="min-h-screen flex flex-col items-center justify-center gap-4 sm:gap-4 md:gap-6 lg:gap-8 font-archivo bg-[#00353A] relative overflow-hidden p-4"
   >
     <!-- Snow effect -->
     <div class="pointer-events-none absolute inset-0 z-0 opacity-20">
@@ -8,27 +8,29 @@
     </div>
 
     <!-- Header -->
-    <header
+        <header
       class="relative z-10 flex flex-col justify-center items-center select-none scale-100 md:scale-100"
     >
       <div class="relative">
-        <p class="font-archivo md:text-4xl lg:text-2xl xl:text-5xl text-white relative">
+        <p
+          class="font-archivo text-lg md:text-4xl lg:text-4xl xl:text-5xl text-white relative"
+        >
           iDEKTEP
         </p>
       </div>
 
       <div class="relative">
         <p
-          class="font-damion md:text-4xl lg:text-2xl xl:text-5xl text-[#C80931] relative md:-mt-6.5 lg:-mt-5.5 xl:-mt-7.5 drop-shadow-md"
+          class="font-damion text-lg md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative -mt-5.5 md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
         >
           photo booth
         </p>
 
         <div
-          class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
+          class="absolute -bottom-2 sm:-bottom-4 md:-bottom-6 lg:-bottom-6 xl:-bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
-            class="md:text-[6px] lg:text-[4.5px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
+            class="text-[4px] md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
           >
             Christmas Edition
           </p>
@@ -132,7 +134,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="absolute bottom-6 text-[7px] sm:text-[8px] md:text-[8px] lg:text-[10px] xl:text-[10px] text-white/20 tracking-[0.4em] uppercase">
+    <footer class="absolute bottom-10 md:bottom-6 z-50 text-[7px] sm:text-[8px] md:text-[8px] lg:text-[10px] xl:text-[10px] text-white/20 tracking-[0.4em] uppercase">
       Copyright © 2025 iDektep. All rights reserved.
     </footer>
 

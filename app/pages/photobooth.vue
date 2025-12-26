@@ -25,7 +25,7 @@
         </p>
 
         <div
-          class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
+          class="absolute -bottom-2 sm:-bottom-4 md:-bottom-6 lg:-bottom-6 xl:-bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
         >
           <p
             class="text-[4px] md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
@@ -125,7 +125,7 @@
 
     <!-- Footer -->
     <footer
-      class="absolute bottom-6 md:bottom-6 text-[7px] sm:text-[8px] md:text-[8px] lg:text-[10px] xl:text-[10px] text-white/20 tracking-[0.4em] uppercase"
+      class="absolute bottom-10 md:bottom-6 z-50 text-[7px] sm:text-[8px] md:text-[8px] lg:text-[10px] xl:text-[10px] text-white/20 tracking-[0.4em] uppercase"
     >
       Copyright © 2025 iDektep. All rights reserved.
     </footer>
