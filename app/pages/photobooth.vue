@@ -65,7 +65,7 @@
         <img
           :src="currentPreset?.frame"
           class="absolute inset-0 w-full h-full object-cover pointer-events-none z-20"
-        />
+        >
       </div>
 
       <div
@@ -137,13 +137,13 @@
     >
       <div class="photo-grid">
         <div v-for="(img, index) in images" :key="index" class="photo-item">
-          <img :src="img" class="w-full h-full object-cover" />
+          <img :src="img" class="w-full h-full object-cover" >
         </div>
       </div>
       <img
         :src="currentPreset?.frame"
         class="absolute inset-0 w-full h-full object-cover z-[100]"
-      />
+      >
     </div>
   </div>
 </template>
