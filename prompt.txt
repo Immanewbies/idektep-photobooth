@@ -1,0 +1,1 @@
+<!-- TODO: make effect add christmas stuff also write text "christmas Edition" maybe have some easter egg, bg color should be #00353A and txt "photo booth" should be #C80931 make it minimal and production ready-->

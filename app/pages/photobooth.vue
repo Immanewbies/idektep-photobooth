@@ -1,11 +1,7 @@
 <template>
   <div
-    class="min-h-screen flex flex-col items-center justify-center gap-4 sm:gap-4 md:gap-6 lg:gap-8 font-archivo bg-[#00353A] relative overflow-hidden p-4"
+    class="min-h-screen flex flex-col items-center justify-center gap-4 sm:gap-4 md:gap-6 lg:gap-8 font-archivo relative overflow-hidden p-4"
   >
-    <div class="pointer-events-none absolute inset-0 z-0 opacity-20">
-      <div class="snow" />
-    </div>
-
     <header
       class="relative z-10 flex flex-col justify-center items-center select-none scale-100 md:scale-100"
     >
@@ -19,20 +15,10 @@
 
       <div class="relative">
         <p
-          class="font-damion text-lg md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative -mt-5.5 md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
+          class="font-damion text-lg md:text-4xl lg:text-4xl xl:text-5xl text-idt2 relative -mt-5.5 md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
         >
           photo booth
         </p>
-
-        <div
-          class="absolute -bottom-2 sm:-bottom-4 md:-bottom-6 lg:-bottom-6 xl:-bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
-        >
-          <p
-            class="text-[4px] md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
-          >
-            Christmas Edition
-          </p>
-        </div>
       </div>
     </header>
 
@@ -77,7 +63,7 @@
           class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 rounded-full border-2 cursor-pointer transition-all duration-300 hover:scale-110 flex-shrink-0 p-0.5"
           :class="
             selectedPreset === index
-              ? 'border-[#C80931] bg-[#C80931]'
+              ? 'border-idt3 bg-idt3'
               : 'border-white/20 bg-white/5'
           "
           @click="selectPreset(index)"
@@ -105,10 +91,15 @@
       </button>
 
       <button
-        class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-[#C80931] text-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg"
+        class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-idt3 text-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg"
+        :disabled="isProcessing"
         @click="handleFinish"
       >
-        <i class="fi-rr-check text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl" />
+      <i
+  :class="isProcessing ? 'fi fi-rr-spinner animate-spin' : 'fi-rr-check'"
+  class="text-xs sm:text-sm md:text-md lg:text-lg"
+/>
+
       </button>
 
       <button
@@ -151,6 +142,7 @@
 <script setup lang="ts">
 /* ... Logic remains exactly as your provided code ... */
 /* Ensure you keep the handleShare, handleDownload, and handleFinish logic */
+import { isIfStatement } from "typescript";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 
@@ -159,42 +151,43 @@ const images = ref<string[]>([]);
 const exportRef = ref<HTMLElement | null>(null);
 const isProcessing = ref(false);
 const selectedPreset = ref(0);
+const isSubmit = ref(false);
 
 const presets = ref([
   {
     id: 1,
     name: "Default",
-    background: "/img/xmas/bg1.png",
-    frame: "/img/xmas/frame1.png",
-    thumbnail: "/img/xmas/bg1.png",
+    background: "/img/sticker/bg1.png",
+    frame: "/img/sticker/frame1.png",
+    thumbnail: "/img/sticker/bg1.png",
   },
   {
     id: 2,
     name: "Preset 2",
-    background: "/img/xmas/bg2.png",
-    frame: "/img/xmas/frame2.png",
-    thumbnail: "/img/xmas/bg2.png",
+    background: "/img/sticker/bg2.png",
+    frame: "/img/sticker/frame2.png",
+    thumbnail: "/img/sticker/bg2.png",
   },
   {
     id: 3,
     name: "Preset 3",
-    background: "/img/xmas/bg3.png",
-    frame: "/img/xmas/frame3.png",
-    thumbnail: "/img/xmas/bg3.png",
+    background: "/img/sticker/bg3.png",
+    frame: "/img/sticker/frame3.png",
+    thumbnail: "/img/sticker/bg3.png",
   },
   {
     id: 4,
     name: "Preset 4",
-    background: "/img/xmas/bg4.png",
-    frame: "/img/xmas/frame4.png",
-    thumbnail: "/img/xmas/bg4.png",
+    background: "/img/sticker/bg4.png",
+    frame: "/img/sticker/frame4.png",
+    thumbnail: "/img/sticker/bg4.png",
   },
   {
     id: 5,
     name: "Preset 5",
-    background: "/img/xmas/bg5.png",
-    frame: "/img/xmas/frame5.png",
-    thumbnail: "/img/xmas/bg5.png",
+    background: "/img/sticker/bg5.png",
+    frame: "/img/sticker/frame5.png",
+    thumbnail: "/img/sticker/bg5.png",
   },
 ]);
 
@@ -206,37 +199,37 @@ const selectPreset = (index: number) => {
 };
 
 const handleFinish = async () => {
+  if (isProcessing.value) return;
+
   isProcessing.value = true;
 
   try {
     const blob = await capturePhotobooth();
-    if (blob) {
-      const fd = new FormData();
-      // แก้ไขตรงนี้: ใส่เครื่องหมาย ` ` หรือ ' ' ครอบชื่อไฟล์
-      fd.append("file", blob, `idektep-photobooth-${Date.now()}.png`);
+    if (!blob) throw new Error("Capture failed");
 
-      const response = await fetch(
-        "https://idektep-photobooth-backend.onrender.com/upload",
-        {
-          method: "POST",
-          body: fd,
-        }
-      );
+    const fd = new FormData();
+    fd.append("file", blob, `idektep-photobooth-${Date.now()}.png`);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Upload failed:", errorData.error);
-        alert("Upload failed: " + errorData.error);
-      } else {
-        console.log("Upload success!");
-      }
+    const response = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: fd,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Upload failed");
     }
-  } catch (err) {
-    console.error("Error:", err);
-  } finally {
-    isProcessing.value = false;
+
+    // SUCCESS → do NOT re-enable button
     sessionStorage.clear();
     router.replace("/");
+
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Something went wrong. Please try again.");
+
+    // ERROR → allow retry
+    isProcessing.value = false;
   }
 };
 
@@ -290,6 +283,7 @@ const capturePhotobooth = async (): Promise<Blob | null> => {
 };
 
 const handleDownload = async () => {
+  if  (isProcessing.value)  return;
   isProcessing.value = true;
   const blob = await capturePhotobooth();
   if (blob) {
@@ -303,6 +297,7 @@ const handleDownload = async () => {
 };
 
 const handleShare = async () => {
+  if  (isProcessing.value)  return;
   isProcessing.value = true;
   const blob = await capturePhotobooth();
   if (blob && navigator.share) {
@@ -377,15 +372,5 @@ onMounted(() => {
 ::-webkit-scrollbar-thumb {
   background: #c80931;
   border-radius: 10px;
-}
-</style>
-
-<style>
-html,
-body {
-  background-color: #00353a;
-}
-body::before {
-  background-color: #00353a;
 }
 </style>

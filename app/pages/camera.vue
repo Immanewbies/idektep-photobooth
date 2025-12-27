@@ -1,12 +1,9 @@
 <template>
   <div
-    class="min-h-screen flex flex-col items-center justify-center gap-4 sm:gap-4 md:gap-6 lg:gap-8 font-archivo bg-[#00353A] relative overflow-hidden p-4"
+    class="min-h-screen flex flex-col items-center justify-center gap-4 sm:gap-4 md:gap-6 lg:gap-8 font-archivo relative overflow-hidden p-4"
   >
-    <!-- Snow effect -->
-    <div class="pointer-events-none absolute inset-0 z-0 opacity-20">
-      <div class="snow" />
-    </div>
 
+  <div></div>
     <!-- Header -->
         <header
       class="relative z-10 flex flex-col justify-center items-center select-none scale-100 md:scale-100"
@@ -21,32 +18,17 @@
 
       <div class="relative">
         <p
-          class="font-damion text-lg md:text-4xl lg:text-4xl xl:text-5xl text-[#C80931] relative -mt-5.5 md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
+          class="font-damion text-lg md:text-4xl lg:text-4xl xl:text-5xl text-idt2 relative -mt-5.5 md:-mt-6.5 lg:-mt-6.5 xl:-mt-7.5 drop-shadow-md"
         >
           photo booth
         </p>
-
-        <div
-          class="absolute -bottom-2 sm:-bottom-4 md:-bottom-6 lg:-bottom-6 xl:-bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded shadow-sm"
-        >
-          <p
-            class="text-[4px] md:text-[6px] lg:text-[6px] xl:text-[7px] uppercase text-white/90 font-medium whitespace-nowrap"
-          >
-            Christmas Edition
-          </p>
-        </div>
       </div>
     </header>
 
     <!-- Main content -->
     <div
-      class="w-full max-w-6xl relative z-10 flex flex-col justify-center items-center md:grid md:grid-cols-[1fr_auto_1fr] md:items-center gap-6"
+      class="w-full max-w-6xl relative z-10 flex flex-col justify-center items-center md:items-center gap-6"
     >
-      <!-- Left snow animation (desktop) -->
-      <div class="hidden md:flex flex-col gap-4 text-white/10 text-6xl">
-        <span class="animate-bounce-slow">❄</span>
-        <span class="animate-bounce-slow delay-300">❆</span>
-      </div>
 
       <!-- Center: video + capture button -->
       <div class="flex flex-col items-center gap-6">
@@ -126,11 +108,7 @@
         </div>
       </div>
 
-      <!-- Right snow animation (desktop) -->
-      <div class="hidden md:flex flex-col gap-4 text-white/10 text-6xl items-end">
-        <span class="animate-bounce-slow delay-150">❆</span>
-        <span class="animate-bounce-slow delay-500">❄</span>
-      </div>
+      <div></div>
     </div>
 
     <!-- Footer -->
@@ -376,15 +354,5 @@ onUnmounted(() => stopCamera());
   50% {
     transform: translateY(-20px);
   }
-}
-</style>
-
-<style>
-html,
-body {
-  background-color: #00353a;
-}
-body::before {
-  background-color: #00353a;
 }
 </style>
