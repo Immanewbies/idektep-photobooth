@@ -106,9 +106,12 @@
 
       <button
         class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-[#C80931] text-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg"
+        :disabled="isProcessing"
         @click="handleFinish"
       >
-        <i class="fi-rr-check text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl" />
+        <i
+        :class="isProcessing ? 'fi-rr-spinner animate-spin' : 'fi-rr-check'" 
+        class="text-xs sm:text-sm md:text-md lg:text-lg xl:text-xl" />
       </button>
 
       <button
@@ -206,37 +209,37 @@ const selectPreset = (index: number) => {
 };
 
 const handleFinish = async () => {
+  if (isProcessing.value) return;
+
   isProcessing.value = true;
 
   try {
     const blob = await capturePhotobooth();
-    if (blob) {
-      const fd = new FormData();
-      // แก้ไขตรงนี้: ใส่เครื่องหมาย ` ` หรือ ' ' ครอบชื่อไฟล์
-      fd.append("file", blob, `idektep-photobooth-${Date.now()}.png`);
+    if (!blob) throw new Error("Capture failed");
 
-      const response = await fetch(
-        "https://idektep-photobooth-backend.onrender.com/upload",
-        {
-          method: "POST",
-          body: fd,
-        }
-      );
+    const fd = new FormData();
+    fd.append("file", blob, `idektep-photobooth-${Date.now()}.png`);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Upload failed:", errorData.error);
-        alert("Upload failed: " + errorData.error);
-      } else {
-        console.log("Upload success!");
-      }
+    const response = await fetch("https://idektep-photobooth-backend.onrender.com/upload", {
+      method: "POST",
+      body: fd,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Upload failed");
     }
-  } catch (err) {
-    console.error("Error:", err);
-  } finally {
-    isProcessing.value = false;
+
+    // SUCCESS → do NOT re-enable button
     sessionStorage.clear();
     router.replace("/");
+
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Something went wrong. Please try again.");
+
+    // ERROR → allow retry
+    isProcessing.value = false;
   }
 };
 
@@ -290,6 +293,7 @@ const capturePhotobooth = async (): Promise<Blob | null> => {
 };
 
 const handleDownload = async () => {
+  if  (isProcessing.value)  return;
   isProcessing.value = true;
   const blob = await capturePhotobooth();
   if (blob) {
@@ -303,6 +307,7 @@ const handleDownload = async () => {
 };
 
 const handleShare = async () => {
+  if  (isProcessing.value)  return;
   isProcessing.value = true;
   const blob = await capturePhotobooth();
   if (blob && navigator.share) {
@@ -319,8 +324,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Damion&display=swap");
-
 .snow {
   background: radial-gradient(circle at center, #fff 1px, transparent 1px);
   background-size: 80px 80px;

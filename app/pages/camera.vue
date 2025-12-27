@@ -314,8 +314,6 @@ onUnmounted(() => stopCamera());
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Damion&display=swap");
-
 /* Performance-optimized Snow */
 .snow {
   background: radial-gradient(circle at center, #fff 1px, transparent 1px);
